@@ -15,8 +15,7 @@ def GoogleCalendarInitView(request):
             'getEvents/client_secret.json',
             scopes=['https://www.googleapis.com/auth/calendar.events']
         )
-
-        flow.redirect_uri = 'http://127.0.0.1:8000/rest/v1/calendar/redirect/'
+        flow.redirect_uri = request.build_absolute_uri()[:request.build_absolute_uri().find('rest')]+'rest/v1/calendar/redirect/'
 
         authorization_url, state = flow.authorization_url(
             access_type='offline',
@@ -35,7 +34,7 @@ def GoogleCalendarRedirectView(request):
             scopes=['https://www.googleapis.com/auth/calendar.events'],
             state=state
         )
-        flow.redirect_uri = 'http://127.0.0.1:8000/rest/v1/calendar/redirect/'
+        flow.redirect_uri = request.build_absolute_uri()[:request.build_absolute_uri().find('rest')]+'rest/v1/calendar/redirect/'
         authorization_response = request.build_absolute_uri()
         flow.fetch_token(authorization_response=authorization_response)
         credentials = flow.credentials
