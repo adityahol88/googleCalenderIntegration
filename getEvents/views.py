@@ -54,10 +54,13 @@ def GoogleCalendarRedirectView(request):
         service = build('calendar', 'v3', credentials=credentials)
         timeMin = '2023-01-01T00:00:00-07:00'
 
-        # Call the Calendar API
+        # Calling the Calendar API
         events_result = service.events().list(calendarId='primary', timeMin=timeMin,
                                               maxResults=20, singleEvents=True, orderBy='startTime').execute()
         for event in events_result['items']:
-            event_list.append(event)
+            event_list.append({'event name':event['summary']})
+            event_list.append({'description':event['description']})
+            event_list.append({"start-time":event['start']})
+            event_list.append({"end-time":event['end']})
 
         return response.Response({"events":event_list})
